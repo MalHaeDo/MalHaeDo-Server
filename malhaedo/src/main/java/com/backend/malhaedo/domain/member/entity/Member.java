@@ -26,6 +26,12 @@ public class Member {
 
     private Boolean isGuest; // 게스트면 true, 회원이면 false
 
+    @Column(name = "provider", nullable = true, length = 10)
+    private String provider;
+
+    @Column(name = "provider_id", nullable = true, length = 60)
+    private String providerId;
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Letter> letterList = new ArrayList<>();
 }
