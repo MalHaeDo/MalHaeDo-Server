@@ -78,4 +78,3 @@ jobs:
             sudo docker run -d -p 8080:8080 --name ${{ secrets.DOCKER_IMAGE }} ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}
             sudo docker image prune -f
           debug: true  # SSH 디버깅 활성화
-          envs: GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no"
