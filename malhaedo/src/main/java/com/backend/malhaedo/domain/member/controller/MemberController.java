@@ -5,6 +5,7 @@ import com.backend.malhaedo.domain.member.dto.MemberResponseDTO;
 import com.backend.malhaedo.domain.member.service.MemberService;
 import com.backend.malhaedo.global.error.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -16,16 +17,17 @@ public class MemberController {
 
     private MemberService memberService;
 
-    @PostMapping("/signup")
-    @Operation(summary = "카카오 회원가입 API", description = "카카오 회원가입 API 입니다.")
-    public ApiResponse<MemberResponseDTO.LoginSuccessDTO> login() {
-        MemberResponseDTO.LoginSuccessDTO response = memberService.joinMember();
-        return ApiResponse.onSuccess(response);
+    @PostMapping("/info")
+    @Operation(summary = "카카오 로그인 설명 API", description = "카카아ㅗ 로그인 과정 설명입니다. <br />"
+            + "1. (백엔드배포주소)/oauth2/authorization/kakao로 연결 <br />"
+            + "2. 소셜 로그인 성공 시 프론트엔드에서 설정한 주소로 리다리엑트 됩니다. (주소는 따로 알려주세요) <br />")
+    public ApiResponse<Void> signUp() {
+        return ApiResponse.onSuccess(null);
     }
 
     @PostMapping("/signup/guest")
     @Operation(summary = "게스트 회원가입 API", description = "게스트 회원가입 API 입니다.")
-    public ApiResponse<MemberResponseDTO.LoginSuccessDTO> guestLogin() {
+    public ApiResponse<MemberResponseDTO.LoginSuccessDTO> guestSignUp() {
         MemberResponseDTO.LoginSuccessDTO response = memberService.joinMember();
         return ApiResponse.onSuccess(response);
     }

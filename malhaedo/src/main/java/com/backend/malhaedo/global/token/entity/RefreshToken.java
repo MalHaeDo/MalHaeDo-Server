@@ -1,27 +1,32 @@
 package com.backend.malhaedo.global.token.entity;
 
 import com.backend.malhaedo.global.common.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Getter
-//@AllArgsConstructor
+@Setter
+@AllArgsConstructor
 @NoArgsConstructor
+@SuperBuilder
 public class RefreshToken extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long memberId;
     private String refreshToken;
 
-    public RefreshToken(Long id, String refreshToken) {
-        this.id = id;
+    @Version
+    private Long version = 0L;
+
+    public RefreshToken(Long memberId, String refreshToken) {
+        this.memberId = memberId;
         this.refreshToken = refreshToken;
     }
 }
