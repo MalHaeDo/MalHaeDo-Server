@@ -12,7 +12,6 @@ public class MemberResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class LoginSuccessDTO {
-        Long memberId;
         String accessToken;
     }
 }

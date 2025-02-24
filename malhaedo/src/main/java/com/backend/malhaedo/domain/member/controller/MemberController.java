@@ -1,7 +1,9 @@
 package com.backend.malhaedo.domain.member.controller;
 
+import com.backend.malhaedo.domain.member.converter.MemberConverter;
 import com.backend.malhaedo.domain.member.dto.MemberRequestDTO;
 import com.backend.malhaedo.domain.member.dto.MemberResponseDTO;
+import com.backend.malhaedo.domain.member.entity.Member;
 import com.backend.malhaedo.domain.member.service.MemberService;
 import com.backend.malhaedo.global.error.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v0/member")
 public class MemberController {
 
-    private MemberService memberService;
+    private final MemberService memberService;
 
     @PostMapping("/info")
     @Operation(summary = "카카오 로그인 설명 API", description = "카카아ㅗ 로그인 과정 설명입니다. <br />"
@@ -27,12 +29,12 @@ public class MemberController {
 
     @PostMapping("/signup/guest")
     @Operation(summary = "게스트 회원가입 API", description = "게스트 회원가입 API 입니다.")
-    public ApiResponse<MemberResponseDTO.LoginSuccessDTO> guestSignUp() {
-        MemberResponseDTO.LoginSuccessDTO response = memberService.joinMember();
-        return ApiResponse.onSuccess(response);
+    public ApiResponse<MemberResponseDTO.LoginSuccessDTO> guestSignUp(HttpServletResponse response) {
+        Member member = MemberConverter.toJoinGuest();
+        return ApiResponse.onSuccess(memberService.joinGuest(member, response));
     }
 
-    @PostMapping("/{memberId}/profile")
+    @PostMapping("/profile")
     @Operation(summary = "프로필 설정 API", description = "프로필 설정 API 입니다. <br />"
             + "닉네임과 섬 이름을 설정합니다.")
     public ApiResponse<Void> setProfile(@PathVariable Long memberId,
@@ -40,7 +42,7 @@ public class MemberController {
         return ApiResponse.onSuccess(null);
     }
 
-    @PatchMapping("/{memberId}/update/profile")
+    @PatchMapping("/update/profile")
     @Operation(summary = "프로필 수정 API", description = "프로필 수정 API 입니다. <br />"
             + "닉네임과 섬 이름을 수정합니다.")
     public ApiResponse<Void> updateProfile(@PathVariable Long memberId,
@@ -48,13 +50,13 @@ public class MemberController {
         return ApiResponse.onSuccess(null);
     }
 
-    @PostMapping("/{memberId}/logout")
+    @PostMapping("/logout")
     @Operation(summary = "로그아웃 API", description = "로그아웃 API 입니다.")
     public ApiResponse<Void> logout(@PathVariable Long memberId) {
         return ApiResponse.onSuccess(null);
     }
 
-    @DeleteMapping("/{memberId}/delete")
+    @DeleteMapping("/delete")
     @Operation(summary = "회원 탈퇴 API", description = "회원 탈퇴 API 입니다.")
     public ApiResponse<Void> deleteMember(@PathVariable Long memberId) {
         return ApiResponse.onSuccess(null);

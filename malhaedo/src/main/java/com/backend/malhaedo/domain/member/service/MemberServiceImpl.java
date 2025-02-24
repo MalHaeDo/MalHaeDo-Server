@@ -25,20 +25,25 @@ public class MemberServiceImpl implements MemberService {
     private final CookieUtil cookieUtil;
 
     @Override
-    public MemberResponseDTO.LoginSuccessDTO joinMember() {
-        return null;
-    }
+    public MemberResponseDTO.LoginSuccessDTO joinGuest(Member member, HttpServletResponse response) {
 
-    @Override
-    public MemberResponseDTO.LoginSuccessDTO login(Long memberId, HttpServletResponse response) {
-
-        Member loginMember = memberRepository.findById(memberId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+        Member loginMember = memberRepository.save(member);
 
         String accessToken = jwtUtil.generateAccessToken(loginMember.getMemberId());
         setRefreshToken(loginMember.getMemberId(), response);
-        return MemberConverter.toLoginSuccessDTO(loginMember.getMemberId(),accessToken);
+        return MemberConverter.toLoginSuccessDTO(member,accessToken);
     }
+
+//    @Override
+//    public MemberResponseDTO.LoginSuccessDTO login(Long memberId, HttpServletResponse response) {
+//
+//        Member loginMember = memberRepository.findById(memberId)
+//                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+//
+//        String accessToken = jwtUtil.generateAccessToken(loginMember.getMemberId());
+//        setRefreshToken(loginMember.getMemberId(), response);
+//        return MemberConverter.toLoginSuccessDTO(loginMember.getMemberId(),accessToken);
+//    }
 
     private void setRefreshToken(Long memberId, HttpServletResponse response) {
         // 새 RefreshToken 발급

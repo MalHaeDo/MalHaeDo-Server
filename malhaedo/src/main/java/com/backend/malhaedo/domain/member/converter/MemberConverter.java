@@ -14,10 +14,16 @@ public class MemberConverter {
                 .build();
     }
 
-    public static MemberResponseDTO.LoginSuccessDTO toLoginSuccessDTO(Long memberId, String accessToken) {
+    public static MemberResponseDTO.LoginSuccessDTO toLoginSuccessDTO(Member member, String accessToken) {
         return MemberResponseDTO.LoginSuccessDTO.builder()
-                .memberId(memberId)
+                .memberId(member.getMemberId())
                 .accessToken(accessToken)
+                .build();
+    }
+
+    public static Member toJoinGuest() {
+        return Member.builder()
+                .isGuest(true)
                 .build();
     }
 }
