@@ -1,6 +1,7 @@
 package com.backend.malhaedo.domain.recommend.entity;
 
 import com.backend.malhaedo.domain.reply.entity.Reply;
+import com.backend.malhaedo.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,7 +10,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Song {
+public class Song extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

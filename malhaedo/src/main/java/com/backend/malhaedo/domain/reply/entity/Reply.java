@@ -2,6 +2,8 @@ package com.backend.malhaedo.domain.reply.entity;
 
 import com.backend.malhaedo.domain.letter.entity.Letter;
 import com.backend.malhaedo.domain.recommend.entity.Song;
+import com.backend.malhaedo.global.common.BaseEntity;
+import com.backend.malhaedo.global.common.enums.Resident;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,7 +12,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Reply {
+public class Reply extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,6 +21,9 @@ public class Reply {
     private String content;
 
     private String summary;
+
+    @Enumerated(EnumType.STRING)
+    private Resident sender;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "letter_id")
