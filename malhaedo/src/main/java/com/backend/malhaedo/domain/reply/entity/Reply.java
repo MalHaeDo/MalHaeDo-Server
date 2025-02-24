@@ -6,10 +6,11 @@ import com.backend.malhaedo.global.common.BaseEntity;
 import com.backend.malhaedo.global.common.enums.Resident;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Getter
-@Builder
+@SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Reply extends BaseEntity {

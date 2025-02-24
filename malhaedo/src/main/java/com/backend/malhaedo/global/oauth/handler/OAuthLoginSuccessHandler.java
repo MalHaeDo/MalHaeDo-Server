@@ -1,12 +1,15 @@
 package com.backend.malhaedo.global.oauth.handler;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 import com.backend.malhaedo.domain.member.entity.Member;
 import com.backend.malhaedo.domain.member.repository.MemberRepository;
 import com.backend.malhaedo.global.jwt.principal.PrincipalDetails;
 import com.backend.malhaedo.global.util.CookieUtil;
 import com.backend.malhaedo.global.util.JwtUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -19,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     @Value("${Jwt.redirect}")
@@ -51,7 +55,10 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
     }
 
     private String setRedirectUri(String accessToken) {
-        String redirectUri = String.format(REDIRECT_URI, accessToken);
+        String encodedToken = URLEncoder.encode(accessToken, StandardCharsets.UTF_8);
+        String redirectUri = REDIRECT_URI + "?access_token=" + encodedToken;
+
+        log.info("🔗 최종 Redirect URL: {}", redirectUri); // 로그 추가
         return redirectUri;
     }
 }
