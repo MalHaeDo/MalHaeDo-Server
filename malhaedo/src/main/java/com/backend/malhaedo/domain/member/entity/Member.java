@@ -1,6 +1,7 @@
 package com.backend.malhaedo.domain.member.entity;
 
 import com.backend.malhaedo.domain.letter.entity.Letter;
+import com.backend.malhaedo.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,7 +13,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Member {
+public class Member extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

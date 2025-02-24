@@ -2,6 +2,7 @@ package com.backend.malhaedo.domain.letter.entity;
 
 import com.backend.malhaedo.domain.member.entity.Member;
 import com.backend.malhaedo.domain.reply.entity.Reply;
+import com.backend.malhaedo.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,7 +14,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Letter {
+public class Letter extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
