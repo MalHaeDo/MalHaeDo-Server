@@ -5,9 +5,11 @@ import com.backend.malhaedo.domain.member.dto.MemberRequestDTO;
 import com.backend.malhaedo.domain.member.dto.MemberResponseDTO;
 import com.backend.malhaedo.domain.member.entity.Member;
 import com.backend.malhaedo.domain.member.service.MemberService;
+import com.backend.malhaedo.global.annotation.CurrentMember;
 import com.backend.malhaedo.global.error.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletResponse;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -35,18 +37,11 @@ public class MemberController {
     }
 
     @PostMapping("/profile")
-    @Operation(summary = "프로필 설정 API", description = "프로필 설정 API 입니다. <br />"
-            + "닉네임과 섬 이름을 설정합니다.")
-    public ApiResponse<Void> setProfile(@PathVariable Long memberId,
+    @Operation(summary = "프로필 설정 및 수정 API", description = "프로필 설정 및 수정 API 입니다. <br />"
+            + "닉네임과 섬 이름을 설정 및 수정합니다.")
+    public ApiResponse<Void> setProfile(@CurrentMember Member member,
                                         @Valid @RequestBody MemberRequestDTO.UpdateProfileRequestDTO request) {
-        return ApiResponse.onSuccess(null);
-    }
-
-    @PatchMapping("/update/profile")
-    @Operation(summary = "프로필 수정 API", description = "프로필 수정 API 입니다. <br />"
-            + "닉네임과 섬 이름을 수정합니다.")
-    public ApiResponse<Void> updateProfile(@PathVariable Long memberId,
-                                           @Valid @RequestBody MemberRequestDTO.UpdateProfileRequestDTO request) {
+        memberService.setProfile(request, member);
         return ApiResponse.onSuccess(null);
     }
 

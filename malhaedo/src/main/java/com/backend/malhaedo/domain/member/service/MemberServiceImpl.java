@@ -1,6 +1,7 @@
 package com.backend.malhaedo.domain.member.service;
 
 import com.backend.malhaedo.domain.member.converter.MemberConverter;
+import com.backend.malhaedo.domain.member.dto.MemberRequestDTO;
 import com.backend.malhaedo.domain.member.dto.MemberResponseDTO;
 import com.backend.malhaedo.domain.member.entity.Member;
 import com.backend.malhaedo.domain.member.repository.MemberRepository;
@@ -11,7 +12,6 @@ import com.backend.malhaedo.global.util.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,4 +53,16 @@ public class MemberServiceImpl implements MemberService {
         Cookie cookie = cookieUtil.createCookie(refreshToken);
         response.addCookie(cookie);
     }
+
+    @Override
+    public Member setProfile(MemberRequestDTO.UpdateProfileRequestDTO request, Member member) {
+
+        if (member == null) throw new GeneralException(ErrorStatus.MEMBER_NOT_FOUND);
+
+        member.setNickName(request.getNickName());
+        member.setIslandName(request.getIslandName());
+
+        return memberRepository.save(member);
+    }
+
 }

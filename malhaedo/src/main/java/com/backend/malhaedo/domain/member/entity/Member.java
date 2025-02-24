@@ -34,4 +34,13 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Letter> letterList = new ArrayList<>();
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public void setIslandName(String islandName) {
+        this.islandName = islandName;
+    }
+
 }

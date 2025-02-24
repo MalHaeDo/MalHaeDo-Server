@@ -1,5 +1,6 @@
 package com.backend.malhaedo.domain.member.converter;
 
+import com.backend.malhaedo.domain.member.dto.MemberRequestDTO;
 import com.backend.malhaedo.domain.member.dto.MemberResponseDTO;
 import com.backend.malhaedo.domain.member.entity.Member;
 
@@ -25,4 +26,5 @@ public class MemberConverter {
                 .isGuest(true)
                 .build();
     }
+
 }
