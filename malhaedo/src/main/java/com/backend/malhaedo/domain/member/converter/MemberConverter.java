@@ -16,7 +16,6 @@ public class MemberConverter {
 
     public static MemberResponseDTO.LoginSuccessDTO toLoginSuccessDTO(Member member, String accessToken) {
         return MemberResponseDTO.LoginSuccessDTO.builder()
-                .memberId(member.getMemberId())
                 .accessToken(accessToken)
                 .build();
     }
