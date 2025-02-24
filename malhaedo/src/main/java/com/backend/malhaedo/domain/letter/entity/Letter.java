@@ -24,6 +24,12 @@ public class Letter extends BaseEntity {
 
     private String summary;
 
+    private Boolean isReplyAllowed;
+
+    private int sentCount; // 보낸 편지 개수
+
+    private int repliedCount; // 답장 개수
+
     @OneToMany(mappedBy = "letter", cascade = CascadeType.ALL)
     private List<Reply> replyList = new ArrayList<>();
 
