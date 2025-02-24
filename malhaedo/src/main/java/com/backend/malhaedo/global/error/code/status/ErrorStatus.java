@@ -23,6 +23,9 @@ public enum ErrorStatus implements BaseErrorCode {
     // Letter
     LETTER_NOT_FOUND(HttpStatus.NOT_FOUND, "LETTER404", "편지를 찾을 수 없습니다."),
 
+    // Reply
+    REPLY_NOT_FOUND(HttpStatus.NOT_FOUND, "REPLY404", "답장을 찾을 수 없습니다."),
+
     // Jwt
     EMPTY_TOKEN(HttpStatus.UNAUTHORIZED, "TOKEN400", "헤더에 토큰이 비어 있습니다."),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "TOKEN401", "토큰이 유효하지 않습니다."),
