@@ -4,13 +4,14 @@ import com.backend.malhaedo.domain.letter.entity.Letter;
 import com.backend.malhaedo.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
-@Builder
+@SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Member extends BaseEntity {
@@ -19,10 +20,8 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
 
-    @Column(nullable = false)
     private String nickName;
 
-    @Column(nullable = false)
     private String islandName;
 
     private Boolean isGuest; // 게스트면 true, 회원이면 false

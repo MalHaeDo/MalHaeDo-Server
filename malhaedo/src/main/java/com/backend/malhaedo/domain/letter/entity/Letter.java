@@ -5,13 +5,14 @@ import com.backend.malhaedo.domain.reply.entity.Reply;
 import com.backend.malhaedo.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
-@Builder
+@SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Letter extends BaseEntity {
