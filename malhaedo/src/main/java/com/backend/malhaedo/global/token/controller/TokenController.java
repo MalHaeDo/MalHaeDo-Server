@@ -22,9 +22,4 @@ public class TokenController {
         TokenResponseDTO.TokenDTO accessToken = tokenService.reissueAccessToken(request, response);
         return ApiResponse.onSuccess(accessToken);
     }
-
-    @GetMapping("/temp")
-    public ApiResponse<Void> temp() {
-        return ApiResponse.onSuccess(null);
-    }
 }
