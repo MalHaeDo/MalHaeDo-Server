@@ -37,4 +37,11 @@ public class Letter extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    public void increaseSentCount() {
+        this.sentCount += 1;
+    }
+    public void increaseRepliedCount() {
+        this.repliedCount += 1;
+    }
 }
