@@ -26,9 +26,6 @@ public class LetterServiceImpl implements LetterService {
         Letter letter = LetterConverter.toLetter(request, member);
 
         letter.increaseSentCount(); // 편지 보낸 횟수 증가
-        if (Boolean.TRUE.equals(request.getIsReplyAllowed())) {
-            letter.increaseRepliedCount(); // 답장 허용 시 답장 받은 횟수 증가
-        }
 
         return letterRepository.save(letter);
     }

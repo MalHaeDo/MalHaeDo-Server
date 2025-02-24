@@ -1,7 +1,10 @@
 package com.backend.malhaedo.domain.reply.controller;
 
+import com.backend.malhaedo.domain.letter.entity.Letter;
+import com.backend.malhaedo.domain.member.entity.Member;
 import com.backend.malhaedo.domain.reply.dto.ReplyResponseDTO;
 import com.backend.malhaedo.domain.reply.service.ReplyService;
+import com.backend.malhaedo.global.annotation.CurrentMember;
 import com.backend.malhaedo.global.error.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -12,16 +15,17 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v0/reply")
 public class ReplyController {
 
-    private ReplyService replyService;
+    private final ReplyService replyService;
 
-    @GetMapping("/{letterId}")
+    @GetMapping("{letterId}")
     @Operation(summary = "주민 답장 확인 API", description = "주민의 답장을 확인하고 저장하는 API 입니다. <br />"
             + "BAEBDURI(\"뱁뚜리\"), <br />" +
             "    DARAMI(\"다람이\"), <br />" +
             "    PENGLE(\"펭글이\"), <br />" +
             "    GOMDOONGI(\"곰둥이\")")
-    public ApiResponse<ReplyResponseDTO.ReplyResultDTO> createReply(@PathVariable("letterId") Long letterId) {
-        ReplyResponseDTO.ReplyResultDTO response = replyService.createReply();
+    public ApiResponse<ReplyResponseDTO.ReplyResultDTO> createReply(
+            @CurrentMember Member member, @PathVariable("letterId") Long letterId) {
+        ReplyResponseDTO.ReplyResultDTO response = replyService.createReply(member, letterId);
         return ApiResponse.onSuccess(response);
     }
 
