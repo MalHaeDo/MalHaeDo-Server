@@ -7,6 +7,7 @@ import com.backend.malhaedo.domain.member.entity.Member;
 import com.backend.malhaedo.domain.member.repository.MemberRepository;
 import com.backend.malhaedo.global.error.code.status.ErrorStatus;
 import com.backend.malhaedo.global.error.exception.GeneralException;
+import com.backend.malhaedo.global.token.repository.RefreshTokenRepository;
 import com.backend.malhaedo.global.util.CookieUtil;
 import com.backend.malhaedo.global.util.JwtUtil;
 import jakarta.servlet.http.Cookie;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final JwtUtil jwtUtil;
     private final CookieUtil cookieUtil;
 
@@ -63,6 +65,22 @@ public class MemberServiceImpl implements MemberService {
         member.setIslandName(request.getIslandName());
 
         return memberRepository.save(member);
+    }
+
+    @Override
+    public void logout(Member member, HttpServletResponse response) {
+
+        refreshTokenRepository.deleteById(member.getMemberId());
+
+        Cookie deletedCookie = cookieUtil.deleteCookie();
+        response.addCookie(deletedCookie);
+    }
+
+    @Override
+    public void deleteMember(Member member) {
+
+        refreshTokenRepository.deleteById(member.getMemberId());
+        memberRepository.delete(member);
     }
 
 }

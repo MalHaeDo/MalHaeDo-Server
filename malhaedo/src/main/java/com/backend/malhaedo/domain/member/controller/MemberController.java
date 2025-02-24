@@ -47,13 +47,15 @@ public class MemberController {
 
     @PostMapping("/logout")
     @Operation(summary = "로그아웃 API", description = "로그아웃 API 입니다.")
-    public ApiResponse<Void> logout(@PathVariable Long memberId) {
+    public ApiResponse<Void> logout(@CurrentMember Member member, HttpServletResponse response) {
+        memberService.logout(member, response);
         return ApiResponse.onSuccess(null);
     }
 
     @DeleteMapping("/delete")
     @Operation(summary = "회원 탈퇴 API", description = "회원 탈퇴 API 입니다.")
-    public ApiResponse<Void> deleteMember(@PathVariable Long memberId) {
+    public ApiResponse<Void> deleteMember(@CurrentMember Member member) {
+        memberService.deleteMember(member);
         return ApiResponse.onSuccess(null);
     }
 }

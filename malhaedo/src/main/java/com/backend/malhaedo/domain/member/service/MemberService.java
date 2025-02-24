@@ -11,4 +11,6 @@ public interface MemberService {
 //    MemberResponseDTO.LoginSuccessDTO login(Long memberId, HttpServletResponse response);
 
     Member setProfile(MemberRequestDTO.UpdateProfileRequestDTO request, Member member);
+    void logout(Member member, HttpServletResponse response);
+    void deleteMember(Member member);
 }
