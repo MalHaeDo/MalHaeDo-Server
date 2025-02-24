@@ -1,6 +1,8 @@
 package com.backend.malhaedo.global.annotation;
 
 import com.backend.malhaedo.domain.member.entity.Member;
+import com.backend.malhaedo.global.error.code.status.ErrorStatus;
+import com.backend.malhaedo.global.error.exception.GeneralException;
 import com.backend.malhaedo.global.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +30,16 @@ public class AuthenticatedMemberResolver implements HandlerMethodArgumentResolve
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        return jwtProvider.getMemberFromHeader(webRequest.getHeader(AUTHORIZATION));
+        String authorizationHeader = webRequest.getHeader(AUTHORIZATION);
+
+
+        Member member = jwtProvider.getMemberFromHeader(authorizationHeader);
+
+        if (member == null) {
+            throw new GeneralException(ErrorStatus.INVALID_TOKEN);
+        }
+
+        return member;
     }
+
 }

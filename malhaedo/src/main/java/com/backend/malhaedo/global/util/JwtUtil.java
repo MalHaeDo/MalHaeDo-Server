@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -109,17 +109,19 @@ public class JwtUtil {
     // 토큰에서 유저 id를 반환하는 메서드
     public Long getIdFromToken(String accessToken) {
         try {
-            return Jwts.parser()
+            Long memberId = Jwts.parser()
                     .verifyWith(secretKey)
                     .build()
                     .parseSignedClaims(accessToken)
                     .getPayload()
                     .get("memberId", Long.class);
+
+            return memberId;
         } catch (JwtException | IllegalArgumentException e) {
-            // 토큰이 유효하지 않은 경우
             throw new GeneralException(ErrorStatus.INVALID_TOKEN);
         }
     }
+
 
     // 토큰에서 멤버를 반환하는 메서드
     public Member getMemberFromHeader(String authorizationHeader) { // annotation 추가 시 이용
