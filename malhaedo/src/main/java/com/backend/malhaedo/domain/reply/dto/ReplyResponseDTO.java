@@ -47,6 +47,6 @@ public class ReplyResponseDTO {
     @AllArgsConstructor
     public static class ReplyPreViewListDTO {
         List<ReplyPreViewDTO> replyList;
-        int repliedCount;
+        int totalElements;
     }
 }

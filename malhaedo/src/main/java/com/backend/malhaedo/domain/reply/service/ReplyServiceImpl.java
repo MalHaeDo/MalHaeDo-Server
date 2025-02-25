@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -45,12 +47,16 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
-    public ReplyResponseDTO.StorageListDTO getStorageList() {
-        return null;
+    public List<Reply> getReplyList(Member member) {
+
+        if (member == null) throw new GeneralException(ErrorStatus.MEMBER_NOT_FOUND);
+        List<Reply> replyList = replyRepository.findAllByLetter_Member_MemberId(member.getMemberId());
+
+        return replyList;
     }
 
     @Override
-    public ReplyResponseDTO.ReplyPreViewListDTO getReplyList() {
+    public ReplyResponseDTO.StorageListDTO getStorageList() {
         return null;
     }
 }

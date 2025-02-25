@@ -2,13 +2,17 @@ package com.backend.malhaedo.domain.reply.controller;
 
 import com.backend.malhaedo.domain.letter.entity.Letter;
 import com.backend.malhaedo.domain.member.entity.Member;
+import com.backend.malhaedo.domain.reply.converter.ReplyConverter;
 import com.backend.malhaedo.domain.reply.dto.ReplyResponseDTO;
+import com.backend.malhaedo.domain.reply.entity.Reply;
 import com.backend.malhaedo.domain.reply.service.ReplyService;
 import com.backend.malhaedo.global.annotation.CurrentMember;
 import com.backend.malhaedo.global.error.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,6 +33,14 @@ public class ReplyController {
         return ApiResponse.onSuccess(response);
     }
 
+    @GetMapping("/list")
+    @Operation(summary = "답장 목록 확인 API", description = "주민의 답장 목록을 확인하는 API 입니다. <br />"
+            + "답장 목록을 확인하세요.")
+    public ApiResponse<ReplyResponseDTO.ReplyPreViewListDTO> getReplyList(@CurrentMember Member member) {
+        List<Reply> replyList = replyService.getReplyList(member);
+        return ApiResponse.onSuccess(ReplyConverter.replyPreVieWListDTO(replyList));
+    }
+
     @DeleteMapping("/{replyId}/delete")
     @Operation(summary = "답장 삭제 API", description = "주민의 답장을 삭제하는 API 입니다.")
     public ApiResponse<Void> deleteReply(@PathVariable("replyId") Long replyId) {
@@ -41,14 +53,6 @@ public class ReplyController {
             + "sentCount: 보낸 편지 개수, repliedCount: 답장 개수")
     public ApiResponse<ReplyResponseDTO.StorageListDTO> getStorageList() {
         ReplyResponseDTO.StorageListDTO response = replyService.getStorageList();
-        return ApiResponse.onSuccess(response);
-    }
-
-    @GetMapping("/list")
-    @Operation(summary = "답장 목록 확인 API", description = "주민의 답장 목록을 확인하는 API 입니다. <br />"
-            + "답장 목록을 확인하세요.")
-    public ApiResponse<ReplyResponseDTO.ReplyPreViewListDTO> getReplyList() {
-        ReplyResponseDTO.ReplyPreViewListDTO response = replyService.getReplyList();
-        return ApiResponse.onSuccess(response);
+        return ApiResponse.onSuccess(null);
     }
 }
