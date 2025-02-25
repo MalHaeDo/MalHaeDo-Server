@@ -20,6 +20,13 @@ public enum ErrorStatus implements BaseErrorCode {
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER404", "멤버를 찾을 수 없습니다."),
     MEMBER_EXIST(HttpStatus.CONFLICT, "MEMBER409", "멤버가 이미 존재합니다."),
 
+    // Letter
+    LETTER_NOT_FOUND(HttpStatus.NOT_FOUND, "LETTER404", "편지를 찾을 수 없습니다."),
+
+    // Reply
+    UNAUTHORIZED_ACCESS(HttpStatus.BAD_REQUEST, "REPLY400", "권한이 없는 접근입니다."),
+    REPLY_NOT_FOUND(HttpStatus.NOT_FOUND, "REPLY404", "답장을 찾을 수 없습니다."),
+
     // Jwt
     EMPTY_TOKEN(HttpStatus.UNAUTHORIZED, "TOKEN400", "헤더에 토큰이 비어 있습니다."),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "TOKEN401", "토큰이 유효하지 않습니다."),

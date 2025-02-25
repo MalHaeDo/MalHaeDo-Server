@@ -1,7 +1,9 @@
 package com.backend.malhaedo.domain.recommend.controller;
 
+import com.backend.malhaedo.domain.member.entity.Member;
 import com.backend.malhaedo.domain.recommend.dto.RecommendResponseDTO;
 import com.backend.malhaedo.domain.recommend.service.RecommendService;
+import com.backend.malhaedo.global.annotation.CurrentMember;
 import com.backend.malhaedo.global.error.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -15,12 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v0/recommend")
 public class RecommendController {
 
-    private RecommendService recommendService;
+    private final RecommendService recommendService;
 
-    @GetMapping("/{letterId}")
+    @GetMapping("/{replyId}")
     @Operation(summary = "이장님 답장 확인 API", description = "이장님의 답장을 확인하는 API 입니다.")
-    public ApiResponse<RecommendResponseDTO.RecommendResultDTO> createRecommend(@PathVariable("letterId") Long letterId) {
-        RecommendResponseDTO.RecommendResultDTO response = recommendService.createSongRecommend();
+    public ApiResponse<RecommendResponseDTO.RecommendResultDTO> createRecommend(
+            @CurrentMember Member member, @PathVariable("replyId") Long replyId) {
+        RecommendResponseDTO.RecommendResultDTO response = recommendService.createSongRecommend(member, replyId);
         return ApiResponse.onSuccess(response);
     }
 }
