@@ -10,10 +10,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+
 public class SwaggerConfig {
 
     @Bean
-    public OpenAPI ChatSulAPI() {
+    public OpenAPI MalHaeDoAPI() {
         Info info = new Info()
                 .title("말해도 API")
                 .description("포텐데이 비사이드 말해도 API 명세서")
@@ -32,6 +33,7 @@ public class SwaggerConfig {
                 .addServersItem(new Server().url("/"))
                 .info(info)
                 .addSecurityItem(securityRequirement)
-                .components(components);
+                .components(components).addSecurityItem(new SecurityRequirement().addList(jwtSchemeName))
+                .path("/api/v0/prompt/reply", new io.swagger.v3.oas.models.PathItem());
     }
 }

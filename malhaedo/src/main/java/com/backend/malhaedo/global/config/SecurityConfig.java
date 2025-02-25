@@ -45,6 +45,7 @@ public class SecurityConfig {
             "/v3/api-docs/**",
             "/api/v0/member/signup",
             "/api/v0/member/signup/guest",
+            "/api/v0/prompt/reply"
     };
 
     @Bean
