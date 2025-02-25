@@ -44,4 +44,8 @@ public class Letter extends BaseEntity {
     public void increaseRepliedCount() {
         this.repliedCount += 1;
     }
+
+    public void decreaseRepliedCount() {
+        this.repliedCount -= 1;
+    }
 }

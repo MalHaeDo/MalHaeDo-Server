@@ -43,7 +43,9 @@ public class ReplyController {
 
     @DeleteMapping("/{replyId}/delete")
     @Operation(summary = "답장 삭제 API", description = "주민의 답장을 삭제하는 API 입니다.")
-    public ApiResponse<Void> deleteReply(@PathVariable("replyId") Long replyId) {
+    public ApiResponse<Void> deleteReply(
+            @CurrentMember Member member, @PathVariable("replyId") Long replyId) {
+        replyService.deleteReply(member, replyId);
         return ApiResponse.onSuccess(null);
     }
 

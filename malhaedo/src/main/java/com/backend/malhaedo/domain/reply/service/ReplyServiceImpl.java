@@ -3,6 +3,7 @@ package com.backend.malhaedo.domain.reply.service;
 import com.backend.malhaedo.domain.letter.entity.Letter;
 import com.backend.malhaedo.domain.letter.repository.LetterRepository;
 import com.backend.malhaedo.domain.member.entity.Member;
+import com.backend.malhaedo.domain.recommend.repository.RecommendRepository;
 import com.backend.malhaedo.domain.reply.converter.ReplyConverter;
 import com.backend.malhaedo.domain.reply.dto.ReplyResponseDTO;
 import com.backend.malhaedo.domain.reply.entity.Reply;
@@ -23,6 +24,7 @@ public class ReplyServiceImpl implements ReplyService {
 
     private final ReplyRepository replyRepository;
     private final LetterRepository letterRepository;
+    private final RecommendRepository recommendRepository;
 
     @Override
     public ReplyResponseDTO.ReplyResultDTO createReply(Member member, Long letterId) {
@@ -66,5 +68,24 @@ public class ReplyServiceImpl implements ReplyService {
         int repliedCount = letters.stream().mapToInt(Letter::getRepliedCount).sum();
 
         return ReplyConverter.toStorageListDTO(sentCount, repliedCount);
+    }
+
+    @Override
+    public void deleteReply(Member member, Long replyId) {
+
+        if (member == null) throw new GeneralException(ErrorStatus.MEMBER_NOT_FOUND);
+
+        Reply reply = replyRepository.findById(replyId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.REPLY_NOT_FOUND));
+
+        Letter letter = reply.getLetter();
+        if (!letter.getMember().getMemberId().equals(member.getMemberId())) {
+            throw new GeneralException(ErrorStatus.UNAUTHORIZED_ACCESS);
+        }
+
+        recommendRepository.deleteByReply(reply);
+        replyRepository.delete(reply);
+
+        letter.decreaseRepliedCount();
     }
 }
