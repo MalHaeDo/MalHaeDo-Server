@@ -51,8 +51,8 @@ public class ReplyController {
     @Operation(summary = "유리병의 개수 확인 API", description = "유리병의 개수를 확인하는 API 입니다. <br />"
             + "보낸 편지 개수와 받은 답장 개수를 확인하세요. <br />"
             + "sentCount: 보낸 편지 개수, repliedCount: 답장 개수")
-    public ApiResponse<ReplyResponseDTO.StorageListDTO> getStorageList() {
-        ReplyResponseDTO.StorageListDTO response = replyService.getStorageList();
-        return ApiResponse.onSuccess(null);
+    public ApiResponse<ReplyResponseDTO.StorageListDTO> getStorageList(@CurrentMember Member member) {
+        ReplyResponseDTO.StorageListDTO response = replyService.getStorageList(member);
+        return ApiResponse.onSuccess(response);
     }
 }

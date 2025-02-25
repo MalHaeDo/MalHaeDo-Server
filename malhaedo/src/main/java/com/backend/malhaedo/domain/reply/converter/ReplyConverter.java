@@ -36,4 +36,12 @@ public class ReplyConverter {
                 .totalElements(replyList.size())
                 .build();
     }
+
+    public static ReplyResponseDTO.StorageListDTO toStorageListDTO(int sentCount, int repliedCount) {
+        return ReplyResponseDTO.StorageListDTO.builder()
+                .sentCount(sentCount)
+                .repliedCount(repliedCount)
+                .build();
+    }
+
 }

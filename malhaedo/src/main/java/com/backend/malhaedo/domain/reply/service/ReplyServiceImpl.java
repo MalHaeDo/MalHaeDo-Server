@@ -56,7 +56,15 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
-    public ReplyResponseDTO.StorageListDTO getStorageList() {
-        return null;
+    public ReplyResponseDTO.StorageListDTO getStorageList(Member member) {
+
+        if (member == null) throw new GeneralException(ErrorStatus.MEMBER_NOT_FOUND);
+
+        List<Letter> letters = letterRepository.findAllByMember_MemberId(member.getMemberId());
+
+        int sentCount = letters.size();
+        int repliedCount = letters.stream().mapToInt(Letter::getRepliedCount).sum();
+
+        return ReplyConverter.toStorageListDTO(sentCount, repliedCount);
     }
 }

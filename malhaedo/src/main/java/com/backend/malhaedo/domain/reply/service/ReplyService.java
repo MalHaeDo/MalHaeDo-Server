@@ -11,5 +11,5 @@ public interface ReplyService {
 
     ReplyResponseDTO.ReplyResultDTO createReply(Member member, Long letterId);
     List<Reply> getReplyList(Member member);
-    ReplyResponseDTO.StorageListDTO getStorageList();
+    ReplyResponseDTO.StorageListDTO getStorageList(Member member);
 }
