@@ -29,11 +29,28 @@ public class SwaggerConfig {
                         .scheme("bearer")
                         .bearerFormat("JWT"));
 
+//        return new OpenAPI()
+//                .addServersItem(new Server().url("/"))
+//                .info(info)
+//                .addSecurityItem(securityRequirement)
+//                .components(components).addSecurityItem(new SecurityRequirement().addList(jwtSchemeName))
+//                .path("/api/v0/prompt/reply", new io.swagger.v3.oas.models.PathItem());
         return new OpenAPI()
                 .addServersItem(new Server().url("/"))
                 .info(info)
                 .addSecurityItem(securityRequirement)
-                .components(components).addSecurityItem(new SecurityRequirement().addList(jwtSchemeName))
-                .path("/api/v0/prompt/reply", new io.swagger.v3.oas.models.PathItem());
+                .components(components)
+                .addSecurityItem(new SecurityRequirement().addList(jwtSchemeName))
+                .path("/api/v0/prompt/reply", new io.swagger.v3.oas.models.PathItem()
+                        .post(new io.swagger.v3.oas.models.Operation()
+                                .addParametersItem(new io.swagger.v3.oas.models.parameters.Parameter()
+                                        .in("header")
+                                        .name("Authorization")
+                                        .description("Bearer token")
+                                        .required(true)
+                                        .schema(new io.swagger.v3.oas.models.media.StringSchema())
+                                )
+                        )
+                );
     }
 }

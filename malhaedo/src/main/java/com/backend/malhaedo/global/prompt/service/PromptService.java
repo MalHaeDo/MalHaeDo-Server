@@ -51,6 +51,7 @@ public class PromptService {
                 .header("Content-Type", "application/json") // ✅ Content-Type 설정
                 .bodyValue(requestDto)
                 .retrieve()
-                .bodyToMono(PromptResponseDTO.class);
+                .bodyToMono(PromptResponseDTO.class)
+                .doOnError(error -> System.err.println("❌ [에러] Clova API 호출 실패: " + error.getMessage()));
     }
 }

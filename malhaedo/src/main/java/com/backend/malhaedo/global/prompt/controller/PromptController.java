@@ -17,9 +17,8 @@ public class PromptController {
     private final PromptService promptService;
 
     @PostMapping("/reply")
-//    @SecurityRequirement(name = "")
+    @SecurityRequirement(name = "")
     public Mono<ResponseEntity<PromptResponseDTO>> createTuningTask(
-//            @RequestHeader("X-NCP-CLOVASTUDIO-REQUEST-ID") String requestId,
             @RequestHeader(value = "Authorization", required = false) String authorization,
             @RequestHeader(value = "X-NCP-CLOVASTUDIO-REQUEST-ID", required = false) String requestId,
             @RequestBody PromptRequestDTO.ReplyPromptRequestDTO requestDto
