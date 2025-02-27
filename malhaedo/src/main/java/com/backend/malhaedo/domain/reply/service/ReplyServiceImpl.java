@@ -11,9 +11,17 @@ import com.backend.malhaedo.domain.reply.repository.ReplyRepository;
 import com.backend.malhaedo.global.common.enums.Resident;
 import com.backend.malhaedo.global.error.code.status.ErrorStatus;
 import com.backend.malhaedo.global.error.exception.GeneralException;
+import com.backend.malhaedo.global.prompt.dto.ClovaReply;
+import com.backend.malhaedo.global.prompt.dto.ClovaResponse;
+import com.backend.malhaedo.global.prompt.dto.PromptRequestDTO;
+import com.backend.malhaedo.global.prompt.dto.PromptResponseDTO;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 
@@ -25,6 +33,14 @@ public class ReplyServiceImpl implements ReplyService {
     private final ReplyRepository replyRepository;
     private final LetterRepository letterRepository;
     private final RecommendRepository recommendRepository;
+    private final WebClient webClient;
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    @Value("${clova.api.reply-url}")
+    private String clovaApiUrl;
+
+    @Value("${clova.api.key}")
+    private String clovaApiKey;
 
     @Override
     public ReplyResponseDTO.ReplyResultDTO createReply(Member member, Long letterId) {
@@ -34,18 +50,22 @@ public class ReplyServiceImpl implements ReplyService {
         Letter letter = letterRepository.findById(letterId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.LETTER_NOT_FOUND));
 
-        String content = "임의로 생성된 답장입니다."; // TODO: 클로바 api 연결
+        ClovaReply replyContent = fetchReplyFromClova(letter.getContent());; // TODO: 클로바 api 연결
 
         Reply reply = Reply.builder()
-                .content(content)
-                .sender(Resident.BAEBDURI) // TODO: 주민 선택
+                .content(replyContent.getContent())
+                .sender(replyContent.getSender())
                 .letter(letter)
                 .build();
 
         Reply savedReply = replyRepository.save(reply);
         letter.increaseRepliedCount();
 
-        return ReplyConverter.replyResultDTO(savedReply);
+        return ReplyResponseDTO.ReplyResultDTO.builder()
+                .replyId(savedReply.getReplyId())
+                .content(savedReply.getContent())
+                .sender(savedReply.getSender())
+                .build();
     }
 
     @Override
@@ -88,4 +108,73 @@ public class ReplyServiceImpl implements ReplyService {
 
         letter.decreaseRepliedCount();
     }
+
+    private ClovaReply fetchReplyFromClova(String content) {
+
+        String requestBody = """
+            {
+              "messages": [
+                {
+                  "role": "system",
+                  "content": "사용자가 작성한 부정적인 편지 내용에 따라 주민 한명의 이름과 답문을 보내주세요. \\n주민들은 다람이, 펭글이, 뺍두리로 3명이 있습니다. \\n다람이는 쿨한 성격으로 말끝마다 ‘후후'를 붙입니다. \\n펭글이는 유쾌하고 발랄한 성격으로 말끝마다 ‘헤헷'을 붙입니다. \\n뱁뚜리는 겁이많고 소심한 성격으로 말끝마다 ‘...’을 붙입니다.\\n편지 내용에는 자신들의 유사경험담이 들어갑니다.\\n실제로 비슷한 상황을 겪었고, 그래서 어떻게 대처했는지 구체적으로 해결책을 제시해주고 공감을 해줍니다.\\n마지막으로 어떻게해서 부정적인 상황을 극복하고 긍정적인 마인드로 바꿀 수 있었는지 알려주면서 이러한 방법을 권유해주세요. 제일 처음엔 반드시 주민의 이름을 제시해야 합니다."
+                },
+                {
+                  "role": "user",
+                  "content": "%s"
+                }
+              ],
+              "topP": 0.8,
+              "topK": 0,
+              "maxTokens": 1000,
+              "temperature": 0.48,
+              "repeatPenalty": 5.0,
+              "stopBefore": [],
+              "includeAiFilters": true,
+              "seed": 0
+            }
+            """.formatted(content);
+
+        ClovaResponse response = webClient.post()
+                .uri(clovaApiUrl)
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + clovaApiKey)
+                .bodyValue(requestBody)
+                .retrieve()
+                .bodyToMono(ClovaResponse.class)
+                .block();
+
+        if (response == null || response.getResult() == null || response.getResult().getMessage() == null) {
+            throw new GeneralException(ErrorStatus.CLVOA_API_ERROR);
+        }
+
+        String fullContent = response.getResult().getMessage().getContent();
+
+        Resident sender = determineResident(fullContent);
+        String contentWithoutResident = removeResidentName(fullContent);
+
+        return new ClovaReply(sender, contentWithoutResident);
+    }
+
+    private String removeResidentName(String content) {
+        if (content.startsWith("다람이 :")) {
+            return content.substring("다람이 :".length()).trim();
+        } else if (content.startsWith("펭글이 :")) {
+            return content.substring("펭글이 :".length()).trim();
+        } else if (content.startsWith("뺍뚜리 :")) {
+            return content.substring("뺍뚜리 :".length()).trim();
+        }
+        return content; // 주민 이름이 없으면 그대로 반환
+    }
+
+    private Resident determineResident(String replyContent) {
+        if (replyContent.startsWith("다람이")) {
+            return Resident.DARAMI;
+        } else if (replyContent.startsWith("펭글이")) {
+            return Resident.PENGLE;
+        } else if (replyContent.startsWith("뺍뚜리")) {
+            return Resident.BAEBDURI;
+        }
+        return Resident.BAEBDURI; // 기본값
+    }
+
 }

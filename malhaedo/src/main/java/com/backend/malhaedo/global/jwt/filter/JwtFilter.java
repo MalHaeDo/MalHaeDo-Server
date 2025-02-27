@@ -21,6 +21,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
+import java.util.List;
 
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
@@ -28,12 +29,27 @@ public class JwtFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private final UserDetailsService userDetailsService;
 
+    private static final List<String> EXCLUDED_PATHS = List.of(
+            "/api/v0/prompt/reply"
+    );
+
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
+
+        String requestURI = request.getRequestURI();
+
+        // ✅ JWT 검사를 제외할 엔드포인트인지 확인
+        if (EXCLUDED_PATHS.contains(requestURI)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         try {
             // 1. HttpServletRequest에 있는 header에서 Authorization header를 가져와 토큰을 가져온다.
             String accessToken = jwtUtil.getAccessTokenFromHeader(request.getHeader("Authorization"));
+
 
             if (accessToken == null || accessToken.isEmpty()) {
                 filterChain.doFilter(request, response);

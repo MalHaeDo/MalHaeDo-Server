@@ -21,10 +21,10 @@ public class Song extends BaseEntity {
 
     private String singer;
 
-    @Column(nullable = false)
     private String url;
 
-    @Column(nullable = false)
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String reason;
 
     @OneToOne

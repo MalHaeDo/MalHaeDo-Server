@@ -19,6 +19,8 @@ public class Reply extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long replyId;
 
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     private String summary;
