@@ -1,5 +1,6 @@
 package com.backend.malhaedo.domain.recommend.entity;
 
+import com.backend.malhaedo.domain.letter.entity.Letter;
 import com.backend.malhaedo.domain.reply.entity.Reply;
 import com.backend.malhaedo.global.common.BaseEntity;
 import jakarta.persistence.*;
@@ -28,6 +29,6 @@ public class Song extends BaseEntity {
     private String reason;
 
     @OneToOne
-    @JoinColumn(name = "reply_id")
-    private Reply reply;
+    @JoinColumn(name = "letter_id")
+    private Letter letter;
 }
