@@ -1,6 +1,7 @@
 package com.backend.malhaedo.domain.letter.entity;
 
 import com.backend.malhaedo.domain.member.entity.Member;
+import com.backend.malhaedo.domain.recommend.entity.Song;
 import com.backend.malhaedo.domain.reply.entity.Reply;
 import com.backend.malhaedo.global.common.BaseEntity;
 import jakarta.persistence.*;
@@ -31,8 +32,11 @@ public class Letter extends BaseEntity {
 
     private int repliedCount; // 답장 개수
 
-    @OneToMany(mappedBy = "letter", cascade = CascadeType.ALL)
-    private List<Reply> replyList = new ArrayList<>();
+    @OneToOne(mappedBy = "letter", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Reply reply;
+
+    @OneToOne(mappedBy = "letter", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Song song;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")

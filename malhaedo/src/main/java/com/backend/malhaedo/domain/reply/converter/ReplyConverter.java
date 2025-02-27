@@ -21,8 +21,8 @@ public class ReplyConverter {
                 .replyId(reply.getReplyId())
                 .summary(reply.getSummary())
                 .sender(reply.getSender())
-                .title(reply.getSong().getTitle())
-                .singer(reply.getSong().getSinger())
+                .title(reply.getLetter().getSong().getTitle())
+                .singer(reply.getLetter().getSong().getSinger())
                 .build();
     }
 

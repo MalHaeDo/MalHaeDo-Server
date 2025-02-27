@@ -28,10 +28,7 @@ public class Reply extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Resident sender;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "letter_id")
     private Letter letter;
-
-    @OneToOne(mappedBy = "reply", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Song song;
 }
