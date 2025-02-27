@@ -29,6 +29,7 @@ public class RecommendServiceImpl implements RecommendService {
 
     private final RecommendRepository recommendRepository;
     private final ReplyRepository replyRepository;
+    private final LetterRepository letterRepository;
     private final WebClient webClient;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -39,21 +40,20 @@ public class RecommendServiceImpl implements RecommendService {
     private String clovaApiKey;
 
     @Override
-    public RecommendResponseDTO.RecommendResultDTO createSongRecommend(Member member, Long replyId) {
+    public RecommendResponseDTO.RecommendResultDTO createSongRecommend(Member member, Long letterId) {
 
         if (member == null) throw new GeneralException(ErrorStatus.MEMBER_NOT_FOUND);
 
-        Reply reply = replyRepository.findById(replyId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.REPLY_NOT_FOUND));
+        Letter letter = letterRepository.findById(letterId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.LETTER_NOT_FOUND));
 
-        // TODO: 클로바 api 연결 및 노래 추천
-        ClovaSong clovaSong = fetchSongRecommendationFromClova(reply.getLetter().getContent());
+        ClovaSong clovaSong = fetchSongRecommendationFromClova(letter.getContent());
 
         Song song = Song.builder()
+                .letter(letter)
                 .reason(clovaSong.getReason()) // 노래 추천 이유 저장
                 .singer(clovaSong.getSinger()) // 가수 저장
                 .title(clovaSong.getTitle())   // 노래 제목 저장
-                .reply(reply)
                 .build();
 
         Song savedSong = recommendRepository.save(song);

@@ -5,5 +5,5 @@ import com.backend.malhaedo.domain.recommend.dto.RecommendResponseDTO;
 
 public interface RecommendService {
 
-    RecommendResponseDTO.RecommendResultDTO createSongRecommend(Member member, Long replyId);
+    RecommendResponseDTO.RecommendResultDTO createSongRecommend(Member member, Long letterId);
 }

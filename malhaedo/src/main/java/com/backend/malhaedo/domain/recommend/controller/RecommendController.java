@@ -19,11 +19,11 @@ public class RecommendController {
 
     private final RecommendService recommendService;
 
-    @GetMapping("/{replyId}")
+    @GetMapping("/{letterId}")
     @Operation(summary = "이장님 답장 확인 API", description = "이장님의 답장을 확인하는 API 입니다.")
     public ApiResponse<RecommendResponseDTO.RecommendResultDTO> createRecommend(
-            @CurrentMember Member member, @PathVariable("replyId") Long replyId) {
-        RecommendResponseDTO.RecommendResultDTO response = recommendService.createSongRecommend(member, replyId);
+            @CurrentMember Member member, @PathVariable("letterId") Long letterId) {
+        RecommendResponseDTO.RecommendResultDTO response = recommendService.createSongRecommend(member, letterId);
         return ApiResponse.onSuccess(response);
     }
 }

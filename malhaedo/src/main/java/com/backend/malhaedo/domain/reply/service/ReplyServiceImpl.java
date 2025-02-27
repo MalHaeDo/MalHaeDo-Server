@@ -50,7 +50,7 @@ public class ReplyServiceImpl implements ReplyService {
         Letter letter = letterRepository.findById(letterId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.LETTER_NOT_FOUND));
 
-        ClovaReply replyContent = fetchReplyFromClova(letter.getContent());; // TODO: 클로바 api 연결
+        ClovaReply replyContent = fetchReplyFromClova(letter.getContent());
 
         Reply reply = Reply.builder()
                 .content(replyContent.getContent())
@@ -103,7 +103,7 @@ public class ReplyServiceImpl implements ReplyService {
             throw new GeneralException(ErrorStatus.UNAUTHORIZED_ACCESS);
         }
 
-        recommendRepository.deleteByReply(reply);
+        recommendRepository.deleteByLetter(letter);
         replyRepository.delete(reply);
 
         letter.decreaseRepliedCount();
