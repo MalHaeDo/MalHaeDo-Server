@@ -9,8 +9,7 @@ public enum Resident {
 
     BAEBDURI("뱁뚜리"),
     DARAMI("다람이"),
-    PENGLE("펭글이"),
-    GOMDOONGI("곰둥이");
+    PENGLE("펭글이");
 
     private final String sender;
 }
