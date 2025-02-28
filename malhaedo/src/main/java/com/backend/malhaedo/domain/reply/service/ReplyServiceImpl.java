@@ -18,6 +18,7 @@ import com.backend.malhaedo.global.prompt.dto.PromptResponseDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,7 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class ReplyServiceImpl implements ReplyService {
 
     private final ReplyRepository replyRepository;
@@ -116,7 +118,7 @@ public class ReplyServiceImpl implements ReplyService {
               "messages": [
                 {
                   "role": "system",
-                  "content": "사용자가 작성한 부정적인 편지 내용에 따라 랜덤으로 주민 한명의 이름과 답문을 보내주세요. \\n주민들은 다람이, 펭글이, 뺍두리로 3명이 있습니다. \\n다람이는 쿨한 성격으로 말끝마다 ‘후후'를 붙입니다. \\n펭글이는 유쾌하고 발랄한 성격으로 말끝마다 ‘헤헷'을 붙입니다. \\n뱁뚜리는 겁이많고 소심한 성격으로 말끝마다 ‘...’을 붙입니다.\\n편지 내용에는 자신들의 유사경험담이 들어갑니다.\\n실제로 비슷한 상황을 겪었고, 그래서 어떻게 대처했는지 구체적으로 해결책을 제시해주고 공감을 해줍니다.\\n마지막으로 어떻게해서 부정적인 상황을 극복하고 긍정적인 마인드로 바꿀 수 있었는지 알려주면서 이러한 방법을 권유해주세요. 답문 길이는 최소 500자 이상이어야 합니다.제일 처음엔 반드시 주민의 이름을 제시해야 합니다."
+                  "content": "사용자가 작성한 부정적인 편지 내용에 따라 랜덤으로 주민 한명의 이름과 답문을 보내주세요. 주민들은 다람이, 펭글이, 뺍두리로 3명이 있습니다. 다람이는 쿨한 성격으로 말끝마다 ‘후후'를 붙입니다. 펭글이는 유쾌하고 발랄한 성격으로 말끝마다 ‘헤헷'을 붙입니다. 뱁뚜리는 겁이많고 소심한 성격으로 말끝마다 ‘...’을 붙입니다. 편지 내용에는 자신들의 유사경험담이 들어갑니다. 실제로 비슷한 상황을 겪었고, 그래서 어떻게 대처했는지 구체적으로 해결책을 제시해주고 공감을 해줍니다. 마지막으로 어떻게해서 부정적인 상황을 극복하고 긍정적인 마인드로 바꿀 수 있었는지 알려주면서 이러한 방법을 권유해주세요. 답문 길이는 최소 500자 이상이어야 합니다. 주민은 랜덤하게 선택해 주세요. 제일 처음엔 반드시 주민의 이름을 제시해야 합니다."
                 },
                 {
                   "role": "user",
@@ -148,6 +150,7 @@ public class ReplyServiceImpl implements ReplyService {
         }
 
         String fullContent = response.getResult().getMessage().getContent();
+        log.info(fullContent);
 
         Resident sender = determineResident(fullContent);
         String contentWithoutResident = removeResidentName(fullContent);

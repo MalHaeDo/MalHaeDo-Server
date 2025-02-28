@@ -25,8 +25,7 @@ public class ReplyController {
     @Operation(summary = "주민 답장 확인 API", description = "주민의 답장을 확인하고 저장하는 API 입니다. <br />"
             + "BAEBDURI(\"뱁뚜리\"), <br />" +
             "    DARAMI(\"다람이\"), <br />" +
-            "    PENGLE(\"펭글이\"), <br />" +
-            "    GOMDOONGI(\"곰둥이\")")
+            "    PENGLE(\"펭글이\")")
     public ApiResponse<ReplyResponseDTO.ReplyResultDTO> createReply(
             @CurrentMember Member member, @PathVariable("letterId") Long letterId) {
         ReplyResponseDTO.ReplyResultDTO response = replyService.createReply(member, letterId);
