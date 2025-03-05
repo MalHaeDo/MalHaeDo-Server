@@ -1,4 +1,6 @@
 *.yml
+debug.log
+src/main/resources/keystore.p12
 
 HELP.md
 .gradle
