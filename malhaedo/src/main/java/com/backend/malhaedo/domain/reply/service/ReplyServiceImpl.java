@@ -11,10 +11,7 @@ import com.backend.malhaedo.domain.reply.repository.ReplyRepository;
 import com.backend.malhaedo.global.common.enums.Resident;
 import com.backend.malhaedo.global.error.code.status.ErrorStatus;
 import com.backend.malhaedo.global.error.exception.GeneralException;
-import com.backend.malhaedo.global.prompt.dto.ClovaReply;
-import com.backend.malhaedo.global.prompt.dto.ClovaResponse;
-import com.backend.malhaedo.global.prompt.dto.PromptRequestDTO;
-import com.backend.malhaedo.global.prompt.dto.PromptResponseDTO;
+import com.backend.malhaedo.global.prompt.dto.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -44,6 +41,9 @@ public class ReplyServiceImpl implements ReplyService {
     @Value("${clova.api.key}")
     private String clovaApiKey;
 
+    @Value("${clova.api.summary-url}")
+    private String SummaryApiUrl;
+
     @Override
     public ReplyResponseDTO.ReplyResultDTO createReply(Member member, Long letterId) {
 
@@ -53,10 +53,12 @@ public class ReplyServiceImpl implements ReplyService {
                 .orElseThrow(() -> new GeneralException(ErrorStatus.LETTER_NOT_FOUND));
 
         ClovaReply replyContent = fetchReplyFromClova(letter.getContent());
+        SummaryReply summaryReply = createComment(replyContent.getContent());
 
         Reply reply = Reply.builder()
                 .content(replyContent.getContent())
                 .sender(replyContent.getSender())
+                .summary(summaryReply.getSummary())
                 .letter(letter)
                 .build();
 
@@ -132,7 +134,7 @@ public class ReplyServiceImpl implements ReplyService {
               "repeatPenalty": 5.0,
               "stopBefore": [],
               "includeAiFilters": true,
-              "seed": 0
+              "seed": 2000
             }
             """.formatted(content);
 
@@ -171,6 +173,36 @@ public class ReplyServiceImpl implements ReplyService {
             return Resident.BAEBDURI;
         }
         return Resident.BAEBDURI; // 기본값
+    }
+
+    private SummaryReply createComment(String content) {
+
+        String requestBody = """
+            {
+              "texts": ["%s"],
+              "includeAiFilters": false,
+              "autoSentenceSplitter": false,
+              "segCount": 1
+            }
+            """.formatted(content);
+
+        SummaryResponse response = webClient.post()
+                .uri(SummaryApiUrl)
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + clovaApiKey)
+                .bodyValue(requestBody)
+                .retrieve()
+                .bodyToMono(SummaryResponse.class)
+                .block();
+
+        if (response == null || response.getResult() == null || response.getResult().getText() == null) {
+            throw new GeneralException(ErrorStatus.CLVOA_API_ERROR);
+        }
+
+        String summary = response.getResult().getText();
+        log.info(summary);
+
+        return new SummaryReply(summary);
     }
 
 }
