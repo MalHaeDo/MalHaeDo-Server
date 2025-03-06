@@ -1,20 +1,11 @@
 package com.backend.malhaedo.domain.reply.converter;
 
-import com.backend.malhaedo.domain.letter.entity.Letter;
 import com.backend.malhaedo.domain.reply.dto.ReplyResponseDTO;
 import com.backend.malhaedo.domain.reply.entity.Reply;
 
 import java.util.List;
 
 public class ReplyConverter {
-
-    public static ReplyResponseDTO.ReplyResultDTO replyResultDTO(Reply reply) {
-        return ReplyResponseDTO.ReplyResultDTO.builder()
-                .replyId(reply.getReplyId())
-                .content(reply.getContent())
-                .sender(reply.getSender())
-                .build();
-    }
 
     public static ReplyResponseDTO.ReplyPreViewDTO replyPreViewDTO(Reply reply) {
         return ReplyResponseDTO.ReplyPreViewDTO.builder()

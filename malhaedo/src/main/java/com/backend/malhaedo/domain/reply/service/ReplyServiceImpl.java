@@ -11,9 +11,11 @@ import com.backend.malhaedo.domain.reply.repository.ReplyRepository;
 import com.backend.malhaedo.global.common.enums.Resident;
 import com.backend.malhaedo.global.error.code.status.ErrorStatus;
 import com.backend.malhaedo.global.error.exception.GeneralException;
-import com.backend.malhaedo.global.prompt.dto.*;
+import com.backend.malhaedo.global.prompt.dto.ClovaReply;
+import com.backend.malhaedo.global.prompt.dto.ClovaResponse;
+import com.backend.malhaedo.global.prompt.dto.SummaryReply;
+import com.backend.malhaedo.global.prompt.dto.SummaryResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,7 +35,6 @@ public class ReplyServiceImpl implements ReplyService {
     private final LetterRepository letterRepository;
     private final RecommendRepository recommendRepository;
     private final WebClient webClient;
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Value("${clova.api.reply-url}")
     private String clovaApiUrl;
@@ -52,7 +53,7 @@ public class ReplyServiceImpl implements ReplyService {
         Letter letter = letterRepository.findById(letterId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.LETTER_NOT_FOUND));
 
-        ClovaReply replyContent = fetchReplyFromClova(letter.getContent());
+        ClovaReply replyContent = fetchReply(letter.getContent());
         SummaryReply summaryReply = createComment(replyContent.getContent());
 
         Reply reply = Reply.builder()
@@ -113,7 +114,7 @@ public class ReplyServiceImpl implements ReplyService {
         letter.decreaseRepliedCount();
     }
 
-    private ClovaReply fetchReplyFromClova(String content) {
+    private ClovaReply fetchReply(String content) {
 
         String requestBody = """
             {

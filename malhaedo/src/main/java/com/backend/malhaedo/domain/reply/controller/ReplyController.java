@@ -1,6 +1,5 @@
 package com.backend.malhaedo.domain.reply.controller;
 
-import com.backend.malhaedo.domain.letter.entity.Letter;
 import com.backend.malhaedo.domain.member.entity.Member;
 import com.backend.malhaedo.domain.reply.converter.ReplyConverter;
 import com.backend.malhaedo.domain.reply.dto.ReplyResponseDTO;
