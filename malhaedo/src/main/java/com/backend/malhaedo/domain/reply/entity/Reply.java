@@ -1,11 +1,13 @@
 package com.backend.malhaedo.domain.reply.entity;
 
 import com.backend.malhaedo.domain.letter.entity.Letter;
-import com.backend.malhaedo.domain.recommend.entity.Song;
 import com.backend.malhaedo.global.common.BaseEntity;
 import com.backend.malhaedo.global.common.enums.Resident;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Entity

@@ -7,7 +7,6 @@ import com.backend.malhaedo.domain.recommend.converter.RecommendConverter;
 import com.backend.malhaedo.domain.recommend.dto.RecommendResponseDTO;
 import com.backend.malhaedo.domain.recommend.entity.Song;
 import com.backend.malhaedo.domain.recommend.repository.RecommendRepository;
-import com.backend.malhaedo.domain.reply.entity.Reply;
 import com.backend.malhaedo.domain.reply.repository.ReplyRepository;
 import com.backend.malhaedo.global.error.code.status.ErrorStatus;
 import com.backend.malhaedo.global.error.exception.GeneralException;
@@ -19,8 +18,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
-import java.util.regex.Pattern;
+
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @Transactional

@@ -3,7 +3,10 @@ package com.backend.malhaedo.domain.member.entity;
 import com.backend.malhaedo.domain.letter.entity.Letter;
 import com.backend.malhaedo.global.common.BaseEntity;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;

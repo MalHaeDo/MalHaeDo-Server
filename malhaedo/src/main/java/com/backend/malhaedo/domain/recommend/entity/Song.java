@@ -1,10 +1,12 @@
 package com.backend.malhaedo.domain.recommend.entity;
 
 import com.backend.malhaedo.domain.letter.entity.Letter;
-import com.backend.malhaedo.domain.reply.entity.Reply;
 import com.backend.malhaedo.global.common.BaseEntity;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Entity
