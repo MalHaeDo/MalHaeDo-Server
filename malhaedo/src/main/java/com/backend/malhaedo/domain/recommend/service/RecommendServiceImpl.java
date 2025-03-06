@@ -7,12 +7,10 @@ import com.backend.malhaedo.domain.recommend.converter.RecommendConverter;
 import com.backend.malhaedo.domain.recommend.dto.RecommendResponseDTO;
 import com.backend.malhaedo.domain.recommend.entity.Song;
 import com.backend.malhaedo.domain.recommend.repository.RecommendRepository;
-import com.backend.malhaedo.domain.reply.repository.ReplyRepository;
 import com.backend.malhaedo.global.error.code.status.ErrorStatus;
 import com.backend.malhaedo.global.error.exception.GeneralException;
 import com.backend.malhaedo.global.prompt.dto.ClovaResponse;
 import com.backend.malhaedo.global.prompt.dto.ClovaSong;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -28,10 +26,8 @@ import java.util.regex.Pattern;
 public class RecommendServiceImpl implements RecommendService {
 
     private final RecommendRepository recommendRepository;
-    private final ReplyRepository replyRepository;
     private final LetterRepository letterRepository;
     private final WebClient webClient;
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Value("${clova.api.song-url}")
     private String clovaApiUrl;
@@ -47,13 +43,13 @@ public class RecommendServiceImpl implements RecommendService {
         Letter letter = letterRepository.findById(letterId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.LETTER_NOT_FOUND));
 
-        ClovaSong clovaSong = fetchSongRecommendationFromClova(letter.getContent());
+        ClovaSong clovaSong = fetchSongRecommend(letter.getContent());
 
         Song song = Song.builder()
                 .letter(letter)
-                .reason(clovaSong.getReason()) // 노래 추천 이유 저장
-                .singer(clovaSong.getSinger()) // 가수 저장
-                .title(clovaSong.getTitle())   // 노래 제목 저장
+                .reason(clovaSong.getReason()) // 추천 이유
+                .singer(clovaSong.getSinger()) // 가수
+                .title(clovaSong.getTitle())   // 노래 제목
                 .build();
 
         Song savedSong = recommendRepository.save(song);
@@ -87,7 +83,7 @@ public class RecommendServiceImpl implements RecommendService {
     }
 
 
-    private ClovaSong fetchSongRecommendationFromClova(String letterContent) {
+    private ClovaSong fetchSongRecommend(String letterContent) {
 
         // API 요청
         ClovaResponse response = webClient.post()
@@ -105,11 +101,9 @@ public class RecommendServiceImpl implements RecommendService {
 
         String fullContent = response.getResult().getMessage().getContent();
 
-        // ✨ 노래 제목과 가수 추출
         String songTitle = extractSongTitle(fullContent);
         String songSinger = extractSongSinger(fullContent);
 
-        // ✨ 추천 이유에서 노래 정보 제거
         String reasonWithoutTitle = removeSongInfo(fullContent);
         String cleanedReason = cleanReasonText(reasonWithoutTitle);
 
@@ -141,7 +135,6 @@ public class RecommendServiceImpl implements RecommendService {
     private String cleanReasonText(String reason) {
         if (reason == null) return "";
 
-        // 개행 문자를 OS에 맞게 변환
         return reason.replaceAll("\\n", System.lineSeparator()).trim();
     }
 

@@ -35,7 +35,6 @@ public class ReplyServiceImpl implements ReplyService {
     private final LetterRepository letterRepository;
     private final RecommendRepository recommendRepository;
     private final WebClient webClient;
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Value("${clova.api.reply-url}")
     private String clovaApiUrl;
@@ -54,7 +53,7 @@ public class ReplyServiceImpl implements ReplyService {
         Letter letter = letterRepository.findById(letterId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.LETTER_NOT_FOUND));
 
-        ClovaReply replyContent = fetchReplyFromClova(letter.getContent());
+        ClovaReply replyContent = fetchReply(letter.getContent());
         SummaryReply summaryReply = createComment(replyContent.getContent());
 
         Reply reply = Reply.builder()
@@ -115,7 +114,7 @@ public class ReplyServiceImpl implements ReplyService {
         letter.decreaseRepliedCount();
     }
 
-    private ClovaReply fetchReplyFromClova(String content) {
+    private ClovaReply fetchReply(String content) {
 
         String requestBody = """
             {
