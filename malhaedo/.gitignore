@@ -1,5 +1,6 @@
 *.yml
 debug.log
+*.png
 
 HELP.md
 .gradle
