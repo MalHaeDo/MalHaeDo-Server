@@ -1,5 +1,5 @@
 # ☀️ 말해도 ☀️
-![img_1.png](img_1.png)
+![img_1.png](malhaedo/src/main/java/com/backend/malhaedo/img_1.png)
 
 ## 📃 서비스 소개 📃
 "힘들고 지칠 때, 어디다 털어놓고 싶지만 이야기하기 어려워요." <br>
@@ -39,7 +39,7 @@
 
 
 ## 🌱 ERD 🌱
-![img.png](img.png)
+![img.png](malhaedo/src/main/java/com/backend/malhaedo/img.png)
 <br/>
 <br/>
 
