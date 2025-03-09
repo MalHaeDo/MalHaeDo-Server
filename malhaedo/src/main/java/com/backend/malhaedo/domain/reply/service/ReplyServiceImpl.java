@@ -15,13 +15,14 @@ import com.backend.malhaedo.global.prompt.dto.ClovaReply;
 import com.backend.malhaedo.global.prompt.dto.ClovaResponse;
 import com.backend.malhaedo.global.prompt.dto.SummaryReply;
 import com.backend.malhaedo.global.prompt.dto.SummaryResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.HttpStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -193,8 +194,23 @@ public class ReplyServiceImpl implements ReplyService {
                 .header("Authorization", "Bearer " + clovaApiKey)
                 .bodyValue(requestBody)
                 .retrieve()
+                .onStatus(status -> status.is4xxClientError(), clientResponse ->
+                        clientResponse.bodyToMono(String.class)
+                                .flatMap(errorBody -> {
+                                    log.error("400 오류 발생: {}", errorBody);
+                                    return Mono.error(new RuntimeException("Client Error: " + errorBody));
+                                })
+                )
+                .onStatus(status -> status.is5xxServerError(), clientResponse ->
+                        clientResponse.bodyToMono(String.class)
+                                .flatMap(errorBody -> {
+                                    log.error("500 오류 발생: {}", errorBody);
+                                    return Mono.error(new RuntimeException("Server Error: " + errorBody));
+                                })
+                )
                 .bodyToMono(SummaryResponse.class)
                 .block();
+
 
         if (response == null || response.getResult() == null || response.getResult().getText() == null) {
             throw new GeneralException(ErrorStatus.CLVOA_API_ERROR);
