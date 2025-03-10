@@ -10,7 +10,8 @@ public class ReplyConverter {
     public static ReplyResponseDTO.ReplyPreViewDTO replyPreViewDTO(Reply reply) {
         return ReplyResponseDTO.ReplyPreViewDTO.builder()
                 .replyId(reply.getReplyId())
-                .summary(reply.getSummary())
+                .replySummary(reply.getSummary())
+                .letterSummary(reply.getLetter().getSummary())
                 .sender(reply.getSender())
                 .title(reply.getLetter().getSong().getTitle())
                 .singer(reply.getLetter().getSong().getSinger())

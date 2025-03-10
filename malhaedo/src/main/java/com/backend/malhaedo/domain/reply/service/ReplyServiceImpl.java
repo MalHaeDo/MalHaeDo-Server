@@ -193,7 +193,7 @@ public class ReplyServiceImpl implements ReplyService {
               ],
               "topP": 0.8,
               "topK": 0,
-              "maxTokens": 256,
+              "maxTokens": 64,
               "temperature": 0.5,
               "repeatPenalty": 5.0,
               "stopBefore": [],
