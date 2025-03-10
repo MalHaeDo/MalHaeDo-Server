@@ -33,7 +33,7 @@ public class ReplyController {
 
     @GetMapping("/list")
     @Operation(summary = "답장 목록 확인 API", description = "주민의 답장 목록을 확인하는 API 입니다. <br />"
-            + "답장 목록을 확인하세요.")
+            + "replySummary: 답장 요약, letterSummary: 편지 요약")
     public ApiResponse<ReplyResponseDTO.ReplyPreViewListDTO> getReplyList(@CurrentMember Member member) {
         List<Reply> replyList = replyService.getReplyList(member);
         return ApiResponse.onSuccess(ReplyConverter.replyPreVieWListDTO(replyList));

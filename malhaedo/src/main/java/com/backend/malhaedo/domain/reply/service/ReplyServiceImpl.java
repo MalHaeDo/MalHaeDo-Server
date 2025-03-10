@@ -181,42 +181,42 @@ public class ReplyServiceImpl implements ReplyService {
 
         String requestBody = """
             {
-              "texts": ["%s"],
-              "includeAiFilters": false,
-              "autoSentenceSplitter": false,
-              "segCount": 1
+              "messages": [
+                {
+                  "role": "system",
+                  "content": "주민의 답문을 한 줄로 요약해 주세요. 존댓말을 사용하지 마세요. 모든 답문은 조언으로 이루어져 있으므로 뒤에 조언을 해주고 있다는 말은 제외하세요."
+                },
+                {
+                  "role": "user",
+                  "content": "%s"
+                }
+              ],
+              "topP": 0.8,
+              "topK": 0,
+              "maxTokens": 64,
+              "temperature": 0.5,
+              "repeatPenalty": 5.0,
+              "stopBefore": [],
+              "includeAiFilters": true,
+              "seed": 0
             }
             """.formatted(content);
 
-        SummaryResponse response = webClient.post()
+        ClovaResponse response = webClient.post()
                 .uri(SummaryApiUrl)
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + clovaApiKey)
                 .bodyValue(requestBody)
                 .retrieve()
-                .onStatus(status -> status.is4xxClientError(), clientResponse ->
-                        clientResponse.bodyToMono(String.class)
-                                .flatMap(errorBody -> {
-                                    log.error("400 오류 발생: {}", errorBody);
-                                    return Mono.error(new RuntimeException("Client Error: " + errorBody));
-                                })
-                )
-                .onStatus(status -> status.is5xxServerError(), clientResponse ->
-                        clientResponse.bodyToMono(String.class)
-                                .flatMap(errorBody -> {
-                                    log.error("500 오류 발생: {}", errorBody);
-                                    return Mono.error(new RuntimeException("Server Error: " + errorBody));
-                                })
-                )
-                .bodyToMono(SummaryResponse.class)
+                .bodyToMono(ClovaResponse.class)
                 .block();
 
 
-        if (response == null || response.getResult() == null || response.getResult().getText() == null) {
+        if (response == null || response.getResult() == null || response.getResult().getMessage() == null) {
             throw new GeneralException(ErrorStatus.CLVOA_API_ERROR);
         }
 
-        String summary = response.getResult().getText();
+        String summary = response.getResult().getMessage().getContent();
         log.info(summary);
 
         return new SummaryReply(summary);

@@ -35,7 +35,8 @@ public class ReplyResponseDTO {
     @AllArgsConstructor
     public static class ReplyPreViewDTO {
         private Long replyId;
-        private String summary;
+        private String replySummary;
+        private String letterSummary;
         private Resident sender;
         private String title;
         private String singer;
