@@ -64,25 +64,25 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         Object principal = authentication.getPrincipal();
 
         if (principal instanceof PrincipalDetails principalDetails) {
-            log.info("기존 사용자 로그인: provider={}, providerId={}",
-                    principalDetails.getMember().getProvider(),
-                    principalDetails.getMember().getProviderId());
+            log.info("일반 로그인 사용자 감지: memberId={}", principalDetails.getMember().getMemberId());
             return principalDetails.getMember();
         } else if (principal instanceof DefaultOidcUser oidcUser) {
+            log.info("Google OIDC 로그인 감지: {}", oidcUser.getAttributes());
 
             // Google OIDC의 경우 "sub" 값을 사용하여 회원 조회
             String providerId = oidcUser.getAttribute("sub");
 
-            // 기존 회원 조회
             return memberRepository.findByProviderAndProviderId("google", providerId)
                     .orElseGet(() -> {
-                        log.info("새로운 Google 사용자를 자동 회원가입 진행 - providerId: {}", providerId);
+                        log.info("🆕 새로운 Google 사용자를 자동 회원가입 진행 - providerId: {}", providerId);
                         return memberRepository.save(MemberConverter.toSocialMember("google", providerId));
                     });
         } else {
-            throw new IllegalStateException("지원되지 않는 OAuth2 사용자 타입입니다.");
+            log.error("알 수 없는 인증 객체: {}", principal.getClass().getName());
+            throw new IllegalStateException("지원되지 않는 인증 타입입니다.");
         }
     }
+
 
     private String setRedirectUri(String accessToken) {
         String encodedToken = URLEncoder.encode(accessToken, StandardCharsets.UTF_8);
