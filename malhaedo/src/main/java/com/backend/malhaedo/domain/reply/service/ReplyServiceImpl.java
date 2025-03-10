@@ -15,13 +15,14 @@ import com.backend.malhaedo.global.prompt.dto.ClovaReply;
 import com.backend.malhaedo.global.prompt.dto.ClovaResponse;
 import com.backend.malhaedo.global.prompt.dto.SummaryReply;
 import com.backend.malhaedo.global.prompt.dto.SummaryResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.HttpStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -180,27 +181,42 @@ public class ReplyServiceImpl implements ReplyService {
 
         String requestBody = """
             {
-              "texts": ["%s"],
-              "includeAiFilters": false,
-              "autoSentenceSplitter": false,
-              "segCount": 1
+              "messages": [
+                {
+                  "role": "system",
+                  "content": "주민의 답문을 한 줄로 요약해 주세요. 존댓말을 사용하지 마세요. 모든 답문은 조언으로 이루어져 있으므로 뒤에 조언을 해주고 있다는 말은 제외하세요."
+                },
+                {
+                  "role": "user",
+                  "content": "%s"
+                }
+              ],
+              "topP": 0.8,
+              "topK": 0,
+              "maxTokens": 64,
+              "temperature": 0.5,
+              "repeatPenalty": 5.0,
+              "stopBefore": [],
+              "includeAiFilters": true,
+              "seed": 0
             }
             """.formatted(content);
 
-        SummaryResponse response = webClient.post()
+        ClovaResponse response = webClient.post()
                 .uri(SummaryApiUrl)
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + clovaApiKey)
                 .bodyValue(requestBody)
                 .retrieve()
-                .bodyToMono(SummaryResponse.class)
+                .bodyToMono(ClovaResponse.class)
                 .block();
 
-        if (response == null || response.getResult() == null || response.getResult().getText() == null) {
+
+        if (response == null || response.getResult() == null || response.getResult().getMessage() == null) {
             throw new GeneralException(ErrorStatus.CLVOA_API_ERROR);
         }
 
-        String summary = response.getResult().getText();
+        String summary = response.getResult().getMessage().getContent();
         log.info(summary);
 
         return new SummaryReply(summary);
