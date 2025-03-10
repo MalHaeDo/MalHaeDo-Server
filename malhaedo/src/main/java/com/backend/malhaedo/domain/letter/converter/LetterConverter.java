@@ -7,10 +7,11 @@ import com.backend.malhaedo.domain.member.entity.Member;
 
 public class LetterConverter {
 
-    public static Letter toLetter(LetterRequestDTO.LetterRequest request, Member member) {
+    public static Letter toLetter(LetterRequestDTO.LetterRequest request, Member member, String summary) {
         return Letter.builder()
                 .content(request.getContent())
                 .isReplyAllowed(request.getIsReplyAllowed())
+                .summary(summary)
                 .member(member)
                 .build();
     }
