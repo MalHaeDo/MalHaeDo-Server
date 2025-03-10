@@ -29,7 +29,7 @@ public class MemberController {
         return ApiResponse.onSuccess(null);
     }
 
-    @PostMapping("/signup/guest")
+    @GetMapping("/signup/guest")
     @Operation(summary = "게스트 회원가입 API", description = "게스트 회원가입 API 입니다.")
     public ApiResponse<MemberResponseDTO.LoginSuccessDTO> guestSignUp(HttpServletResponse response) {
         Member member = MemberConverter.toJoinGuest();
