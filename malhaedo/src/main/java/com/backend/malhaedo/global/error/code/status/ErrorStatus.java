@@ -16,6 +16,8 @@ public enum ErrorStatus implements BaseErrorCode {
     FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON403", "금지된 요청입니다."),
 
     // Member
+    NICKNAME_ALREADY_EXISTS(HttpStatus.ALREADY_REPORTED, "MEMBER400", "이미 사용 중인 닉네임입니다."),
+    ISLAND_NAME_ALREADY_EXISTS(HttpStatus.ALREADY_REPORTED, "MEMBER400", "이미 사용 중인 닉네임입니다."),
     MEMBER_ROLE_INVALID(HttpStatus.FORBIDDEN, "MEMBER403", "해당 API 이용 권한이 없습니다."),
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER404", "멤버를 찾을 수 없습니다."),
     MEMBER_EXIST(HttpStatus.CONFLICT, "MEMBER409", "멤버가 이미 존재합니다."),

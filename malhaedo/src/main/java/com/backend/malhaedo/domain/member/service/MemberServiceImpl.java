@@ -61,6 +61,14 @@ public class MemberServiceImpl implements MemberService {
 
         if (member == null) throw new GeneralException(ErrorStatus.MEMBER_NOT_FOUND);
 
+        if (!member.getNickName().equals(request.getNickName()) && memberRepository.existsByNickName(request.getNickName())) {
+            throw new GeneralException(ErrorStatus.NICKNAME_ALREADY_EXISTS);
+        }
+
+        if (!member.getIslandName().equals(request.getIslandName()) && memberRepository.existsByIslandName(request.getIslandName())) {
+            throw new GeneralException(ErrorStatus.ISLAND_NAME_ALREADY_EXISTS);
+        }
+
         member.setNickName(request.getNickName());
         member.setIslandName(request.getIslandName());
 
