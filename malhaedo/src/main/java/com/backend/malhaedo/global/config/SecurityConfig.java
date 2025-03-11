@@ -47,6 +47,7 @@ public class SecurityConfig {
             "/api/v0/member/signup/guest",
             "/api/v0/auth/kakao",
             "/api/v0/auth/google",
+            "/.well-known/acme-challenge/**",
     };
 
     @Bean
