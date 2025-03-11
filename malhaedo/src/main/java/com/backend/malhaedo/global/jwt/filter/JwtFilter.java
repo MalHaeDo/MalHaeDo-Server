@@ -28,21 +28,8 @@ public class JwtFilter extends OncePerRequestFilter {
     private final UserDetailsService userDetailsService;
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        String requestUri = request.getRequestURI();
-        return requestUri.startsWith("/.well-known/acme-challenge/");
-    }
-
-    @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        String requestUri = request.getRequestURI();
-
-        //  Let's Encrypt 인증 요청은 JWT 인증에서 제외
-        if (requestUri.startsWith("/.well-known/acme-challenge/")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
 
         try {
             // 1. HttpServletRequest에 있는 header에서 Authorization header를 가져와 토큰을 가져온다.

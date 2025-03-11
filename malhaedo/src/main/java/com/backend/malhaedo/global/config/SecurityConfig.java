@@ -52,26 +52,38 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, CorsConfig corsConfig) throws Exception {
         http
-                .cors(cors -> cors.configurationSource(corsConfig.corsConfigurationSource()))
+                // 허용할 URL, 역할별로 나눌 URL, 인증을 요구하는 URL 설정
                 .authorizeHttpRequests(request -> request
-                        // 인증 없이 허용할 경로 추가
-                        .requestMatchers("/.well-known/acme-challenge/**").permitAll()
+                        // allowUrl을 모두 허용
                         .requestMatchers(allowUrl).permitAll()
+                        // 이외의 요청에 대해서는 인증이 필요하도록 설정
                         .anyRequest().authenticated())
-                .csrf(AbstractHttpConfigurer::disable)
-                .httpBasic(HttpBasicConfigurer::disable)
+                // cors 필터 추가
+                .addFilter(corsConfig.corsFilter())
+                // jwtFilter를 UsernamePasswordAuthenticationFilter 앞에 오도록 설정
+                .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
+                // formLogin 비활성화
                 .formLogin(AbstractHttpConfigurer::disable)
+                // httpBasic 비활성화
+                .httpBasic(HttpBasicConfigurer::disable)
+                // csrf 비활성화
+                .csrf(AbstractHttpConfigurer::disable)
+                // 인증 인가에 대한 예외처리
                 .exceptionHandling(exceptionHandling -> exceptionHandling
+                        // 인가에 대해 예외처리할 Handler 추가
                         .accessDeniedHandler(jwtAccessDeniedHandler)
+                        // 인증에 대해 예외처리할 Handler 추가
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint))
+                // OAuth2에 대한 처리
                 .oauth2Login(oauth ->
                         oauth
-                                .successHandler(oAuthLoginSuccessHandler)
-                                .failureHandler(oAuthLoginFailureHandler)
+                                .successHandler(oAuthLoginSuccessHandler) // 로그인 성공 시 핸들러
+                                .failureHandler(oAuthLoginFailureHandler) // 로그인 실패 시 핸들러
                                 .userInfoEndpoint(userInfo ->
-                                        userInfo.userService(principalOauth2UserService)
+                                        userInfo.userService(principalOauth2UserService) // OAuth2 사용자 서비스 설정
                                 )
                 );
+
 
         return http.build();
     }
