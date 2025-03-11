@@ -58,10 +58,9 @@ public class SecurityConfig {
                         .requestMatchers("/.well-known/acme-challenge/**").permitAll()
                         .requestMatchers(allowUrl).permitAll()
                         .anyRequest().authenticated())
-                .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
-                .formLogin(AbstractHttpConfigurer::disable)
-                .httpBasic(HttpBasicConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
+                .httpBasic(HttpBasicConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable)
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .accessDeniedHandler(jwtAccessDeniedHandler)
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint))
@@ -76,7 +75,6 @@ public class SecurityConfig {
 
         return http.build();
     }
-
 
     @Bean
     public Filter jwtFilter() {
