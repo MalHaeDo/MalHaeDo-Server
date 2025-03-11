@@ -69,5 +69,4 @@ public class JwtFilter extends OncePerRequestFilter {
             om.writeValue(response.getOutputStream(), customResponse);
         }
     }
-
 }
