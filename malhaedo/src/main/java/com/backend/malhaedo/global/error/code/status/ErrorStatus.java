@@ -26,6 +26,7 @@ public enum ErrorStatus implements BaseErrorCode {
     // Reply
     UNAUTHORIZED_ACCESS(HttpStatus.BAD_REQUEST, "REPLY400", "권한이 없는 접근입니다."),
     REPLY_NOT_FOUND(HttpStatus.NOT_FOUND, "REPLY404", "답장을 찾을 수 없습니다."),
+    REPLY_EXIST(HttpStatus.CONFLICT, "REPLY409", "답장이 이미 존재합니다"),
 
     // Clova
     CLVOA_API_ERROR(HttpStatus.BAD_REQUEST, "CLOVA400", "클로바 API 요청에 실패했습니다."),

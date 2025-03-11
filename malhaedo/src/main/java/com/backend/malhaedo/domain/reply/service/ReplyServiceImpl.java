@@ -54,6 +54,10 @@ public class ReplyServiceImpl implements ReplyService {
         Letter letter = letterRepository.findById(letterId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.LETTER_NOT_FOUND));
 
+        replyRepository.findByLetter(letter).ifPresent(existingReply -> {
+            throw new GeneralException(ErrorStatus.REPLY_EXIST);
+        });
+
         ClovaReply replyContent = fetchReply(letter.getContent());
         SummaryReply summaryReply = createComment(replyContent.getContent());
 
