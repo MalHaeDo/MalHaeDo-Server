@@ -22,8 +22,8 @@ public class MemberController {
 
     @PostMapping("/info")
     @Operation(summary = "소셜 로그인 설명 API", description = "카카오 로그인 과정 설명입니다. <br />"
-            + "1-1. 카카오: http://malhaedo-server.shop/oauth2/authorization/kakao로 연결 <br />"
-            + "1-1. 구글: http://malhaedo-server.shop/oauth2/authorization/google 로 연결 <br />"
+            + "1-1. 카카오: https://malhaedo-server.shop/oauth2/authorization/kakao로 연결 <br />"
+            + "1-1. 구글: https://malhaedo-server.shop/oauth2/authorization/google 로 연결 <br />"
             + "2. 소셜 로그인 성공 시 프론트엔드에서 설정한 주소로 리다리엑트 됩니다. (주소는 따로 알려주세요) <br />")
     public ApiResponse<Void> signUp() {
         return ApiResponse.onSuccess(null);
