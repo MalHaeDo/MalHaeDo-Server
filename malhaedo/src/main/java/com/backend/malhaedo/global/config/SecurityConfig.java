@@ -54,6 +54,8 @@ public class SecurityConfig {
         http
                 .cors(cors -> cors.configurationSource(corsConfig.corsConfigurationSource()))
                 .authorizeHttpRequests(request -> request
+                        // 인증 없이 허용할 경로 추가
+                        .requestMatchers("/.well-known/acme-challenge/**").permitAll()
                         .requestMatchers(allowUrl).permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
@@ -72,9 +74,9 @@ public class SecurityConfig {
                                 )
                 );
 
-
         return http.build();
     }
+
 
     @Bean
     public Filter jwtFilter() {
