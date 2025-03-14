@@ -44,7 +44,7 @@
 <br/>
 
 ## 📙 API Docs 📙
-[Swagger 문서 확인하러 가기](http://malhaedo-server.store/swagger-ui/index.html)
+[Swagger 문서 확인하러 가기](https://malhaedo-server.shop/swagger-ui/index.html)
 <br/>
 <br/>
 
